@@ -24,6 +24,8 @@ clearBtn.addEventListener('click', () => {
     operator = '';
     currentOpScreen.innerText = '0';
     previousOpScreen.innerText = '';
+    signBtnClicked = false;
+    equalsToClicked = false;
 })
 
 let deleteBtn = document.querySelector('#delete');
@@ -46,24 +48,39 @@ dotBtn.addEventListener('click', () => {
 });
 
 let signButtons = document.querySelectorAll('.sign');
+let signBtnClicked = false;
 
 signButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        firstOperand = val;
-        operator = button.innerText;
-        previousOpScreen.innerText = currentOpScreen.innerText + button.innerText;
-        currentOpScreen.innerText = val;
-        val = '';
+        if (!signBtnClicked) {
+            operator = button.innerText;
+            firstOperand = val;
+            previousOpScreen.innerText = currentOpScreen.innerText + button.innerText;
+            currentOpScreen.innerText = val;
+            val = '';
+            signBtnClicked = true;
+        } else {
+            previousOpScreen.innerText = calculate(firstOperand, val) + button.innerText;
+            currentOpScreen.innerText = calculate(firstOperand, val);
+            firstOperand = currentOpScreen.innerText;
+            val = '';
+            operator = button.innerText;
+        }
+        equalsToClicked = false;
     })
 })
 
 let equalsTo = document.querySelector('#equals');
+let equalsToClicked = false;
 
 equalsTo.addEventListener('click', () => {
-    secondOperand = val;
-    previousOpScreen.innerText = firstOperand + operator + secondOperand + '='
-    currentOpScreen.innerText = calculate(firstOperand, secondOperand);
-    val = currentOpScreen.innerText;
+    if (!equalsToClicked) {
+        secondOperand = val;
+        previousOpScreen.innerText = firstOperand + operator + secondOperand + '='
+        currentOpScreen.innerText = calculate(firstOperand, secondOperand);
+        val = currentOpScreen.innerText;
+    };
+    equalsToClicked = true;
 })
 
 const calculate = function (a, b) {
