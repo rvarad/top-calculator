@@ -10,8 +10,12 @@ let operator = '';
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
-        val = val + button.innerText;
-        currentOpScreen.innerText = val;
+        if (lengthLimitReached(val)) {
+            alert('Length Limit for calculator reached! Please choose an operation to be performed.');
+        } else {
+            val = val + button.innerText;
+            currentOpScreen.innerText = val;
+        }
     })
 })
 
@@ -54,7 +58,7 @@ signButtons.forEach((button) => {
     button.addEventListener('click', () => {
         if (!signBtnClicked) {
             operator = button.innerText;
-            firstOperand = val;
+            firstOperand = (currentOpScreen.innerText === '0') ? '0' : val;
             previousOpScreen.innerText = currentOpScreen.innerText + button.innerText;
             currentOpScreen.innerText = val;
             val = '';
@@ -76,23 +80,51 @@ let equalsToClicked = false;
 equalsTo.addEventListener('click', () => {
     if (!equalsToClicked) {
         secondOperand = val;
-        previousOpScreen.innerText = firstOperand + operator + secondOperand + '='
         currentOpScreen.innerText = calculate(firstOperand, secondOperand);
+        if (secondOperand != 0) {
+            previousOpScreen.innerText = firstOperand + operator + secondOperand + '=';
+            equalsToClicked = true;
+        } else {
+            previousOpScreen.innerText = firstOperand + operator;
+            equalsToClicked = false;
+        };
         val = currentOpScreen.innerText;
     };
-    equalsToClicked = true;
-})
+});
+
+// window.addEventListener('keydown', (e) => {
+//     console.log(e);
+// });
 
 const calculate = function (a, b) {
+    let result;
     if (operator == '+') {
-        return (Number(a) + Number(b));
+        result = roundResult(Number(a) + Number(b));
     } else if (operator == '-') {
-        return (Number(a) - Number(b));
+        result = roundResult(Number(a) - Number(b));
     } else if (operator == '*') {
-        return (Number(a) * Number(b));
-    } else if (operator == '/') {
-        return (Number(a) / Number(b));
+        result = roundResult(Number(a) * Number(b));
+    } else if (operator == '÷') {
+        if (b == '0') {
+            alert('Divided by 0, undefined');
+            result = b;
+        } else {
+            result = roundResult(Number(a) / Number(b));
+        }
     } else {
-        return ('ERROR');
+        result = 'ERROR';
     }
-}
+    return result;
+};
+
+const lengthLimitReached = function (str) {
+    if (str.length >= 28) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+const roundResult = function (number) {
+    return (Math.round(number*1000))/1000;
+};
