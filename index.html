@@ -7,17 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./app.js" defer></script>
+    <!-- <script src="./app.js" defer></script> -->
+    <script src="./script.js" defer></script>
 </head>
 
 <body>
     <div class="main">
         <div class="container">
             <div class="screen">
-                <div class="previousopscreen">
+                <div id="previousopscreen">
                     
                 </div>
-                <div class="currentopscreen">
+                <div id="currentopscreen">
                     0
                 </div>
             </div>
@@ -33,14 +34,14 @@
                 <button class="number btn" data-number>4</button>
                 <button class="number btn" data-number>5</button>
                 <button class="number btn" data-number>6</button>
-                <button class="sign btn" data-operator>*</button>
+                <button class="sign btn" data-operator>×</button>
                 <button class="number btn" data-number>1</button>
                 <button class="number btn" data-number>2</button>
                 <button class="number btn" data-number>3</button>
                 <button class="sign btn" data-operator>-</button>
                 <button class="btn" id="dot" data-number>.</button>
                 <button class="number btn" data-number>0</button>
-                <button class="btn" id="equals" data-equals-to>=</button>
+                <button class="btn" id="equals" data-equalsto>=</button>
                 <button class="sign btn" data-operator>+</button>
             </div>
         </div>
