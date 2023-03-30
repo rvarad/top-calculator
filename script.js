@@ -9,7 +9,9 @@ let operatorButtons = document.querySelectorAll('[data-operator]');
 let equalsTo = document.querySelector('[data-equalsto]');
 let btns = document.querySelectorAll('.btn');
 
-let firstOperand = 0;
+let temp1;
+let temp2;
+let firstOperand = null;
 let operator = null;
 let secondOperand = null;
 let operationSet = false;
@@ -63,7 +65,9 @@ function allClear() {
     resetScreen();
     currentOpScreen.innerText = '0';
     previousOpScreen.innerText = '';
-    firstOperand = 0;
+    temp1 = null;
+    temp2 = null;
+    firstOperand = null;
     operator = null;
     secondOperand = null;
     operationSet = false;
@@ -77,8 +81,8 @@ function resetScreen() {
 
 function setOperator(sign) {
     if (operationSet) { calculate() };
-    operator = sign;
-    firstOperand = currentOpScreen.innerText;
+    firstOperand = (temp1) ? temp1 : currentOpScreen.innerText;
+    operator = (temp2) ? temp2 : sign;
     previousOpScreen.innerText = `${firstOperand} ${operator}`;
     operationSet = true;
     shouldResetScreen = true;
@@ -86,10 +90,16 @@ function setOperator(sign) {
 
 function calculate() {
     if (!operationSet || shouldResetScreen) { return; }
+    if (currentOpScreen.innerText === '0' && operator === '÷') {
+        err('divided by zero');
+        return;
+    }
     secondOperand = currentOpScreen.innerText;
-    currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('divided by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
     previousOpScreen.innerText = `${firstOperand} ${operator} ${secondOperand} = `;
+    currentOpScreen.innerText = (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
     operationSet = false;
+    temp1 = null;
+    temp2 = null;
 };
 
 function operate(a, operator, b) {
@@ -114,10 +124,10 @@ function operate(a, operator, b) {
 function err(code) {
     switch (code) {
         case 'divided by zero':
-            previousOpScreen.innerText = `${firstOperand} ${operator}`;
-            currentOpScreen.innerText = '';
+            temp1 = firstOperand;
+            temp2 = operator;
             alert('Divided by zero! Undefined.');
-            return currentOpScreen.innerText;
+            return;
         case 'limit reached':
             alert('Length Limit for calculator reached! Please choose an operation to be performed.');
             return;
