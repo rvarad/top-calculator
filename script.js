@@ -12,14 +12,13 @@ let firstOperand = 0;
 let operator = null;
 let secondOperand = null;
 let operationSet = false;
-let equalsToClicked = false;
 let shouldResetScreen = false;
 
 window.addEventListener('keydown', (e) => keyboardInputHandler(e.key));
 allClearBtn.addEventListener('click', () => allClear());
 deleteBtn.addEventListener('click', () => deleteNumber());
 numberButtons.forEach((button) => {
-    button.addEventListener('click', () => appendNumber(button.innerText))
+    button.addEventListenr('click', () => appendNumber(button.innerText))
 });
 operatorButtons.forEach((button) => {
     button.addEventListener('click', () => setOperator(button.innerText))
@@ -45,11 +44,11 @@ function appendPoint() {
             currentOpScreen.innerText += '.';
         }
     }
-}
+};
 
 function deleteNumber() {
     currentOpScreen.innerText = currentOpScreen.innerText.slice(0, -1);
-}
+};
 
 function allClear() {
     resetScreen();
@@ -59,49 +58,30 @@ function allClear() {
     operator = null;
     secondOperand = null;
     operationSet = false;
-    equalsToClicked = false;
     shouldResetScreen = false;
-}
+};
 
 function resetScreen() {
     currentOpScreen.innerText = '';
     shouldResetScreen = false;
-    
-}
-
-function setOperator(sign) {
-    if (!operationSet) {
-        operator = sign;
-        firstOperand = currentOpScreen.innerText;
-        previousOpScreen.innerText = `${firstOperand} ${operator}`;
-        operationSet = true;
-        resetScreen();
-    } else {
-        previousOpScreen.innerText = `${calculate('continous operation')} ${sign}`;
-        operator  = sign;
-        secondOperand = '';
-        shouldResetScreen = true;
-    }
 };
 
-function calculate(origin) {
-    if ((origin === 'equals to sign') && (equalsToClicked === false)) {
-        equalsToClicked = true;
-        secondOperand = currentOpScreen.innerText;
-        if (secondOperand) {
-            previousOpScreen.innerText = `${firstOperand} ${operator} ${secondOperand} =`;
-            currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('div by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
-        } else {
-            currentOpScreen.innerText = err('no second operand input');
-        }
-    } else if (origin === 'continous operation' || !shouldResetScreen) {
-        secondOperand = currentOpScreen.innerText;
-        currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('divided by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
-        firstOperand = currentOpScreen.innerText;
-        operationSet = false;
-        return currentOpScreen.innerText;
-    }
-}
+function setOperator(sign) {
+    if (operationSet) { calculate() };
+    operator = sign;
+    firstOperand = currentOpScreen.innerText;
+    previousOpScreen.innerText = `${firstOperand} ${operator}`;
+    operationSet = true;
+    shouldResetScreen = true;
+};
+
+function calculate() {
+    if (!operationSet || shouldResetScreen) { return; }
+    secondOperand = currentOpScreen.innerText;
+    currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('div by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
+    previousOpScreen.innerText = `${firstOperand} ${operator} ${secondOperand} = `;
+    operationSet = false;
+};
 
 function operate(a, operator, b) {
     a = Number(a);
@@ -119,29 +99,29 @@ function operate(a, operator, b) {
         default:
             return;
     }
-}
+};
 
-function err (code) {
+function err(code) {
     switch (code) {
         case 'divided by zero':
             previousOpScreen.innerText = `${firstOperand} ${operator}`;
             currentOpScreen.innerText = '';
             equalsToClicked = false;
-            alert ('Divided by zero! Undefined.');
+            alert('Divided by zero! Undefined.');
             return currentOpScreen.innerText;
         case 'no second operand input':
             previousOpScreen.innerText = `${firstOperand} ${operator}`;
             currentOpScreen.innerText = '';
             equalsToClicked = false;
-            alert ('input a second number.');
+            alert('input a second number.');
             return currentOpScreen.innerText;
-        
+
         default:
             break;
     }
-}
+};
 
-function inputConvertor (input) {
+function inputConvertor(input) {
     switch (input) {
         case '/':
             return ('÷');
@@ -151,13 +131,13 @@ function inputConvertor (input) {
             return ('-');
         case '+':
             return ('+');
-    
+
         default:
             break;
     }
 };
 
-function keyboardInputHandler (input) {
+function keyboardInputHandler(input) {
     console.log(input)
     switch (true) {
         case (0 <= Number(input) && Number(input) <= 9):
@@ -172,7 +152,7 @@ function keyboardInputHandler (input) {
             return deleteNumber();
         case (input === 'Escape' || input === 'End'):
             return allClear();
-        
+
         default:
             break;
     }
