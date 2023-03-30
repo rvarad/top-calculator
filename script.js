@@ -7,6 +7,7 @@ let deleteBtn = document.querySelector('[data-delete]');
 let numberButtons = document.querySelectorAll('[data-number]');
 let operatorButtons = document.querySelectorAll('[data-operator]');
 let equalsTo = document.querySelector('[data-equalsto]');
+let btns = document.querySelectorAll('.btn');
 
 let firstOperand = 0;
 let operator = null;
@@ -18,12 +19,16 @@ window.addEventListener('keydown', (e) => keyboardInputHandler(e.key));
 allClearBtn.addEventListener('click', () => allClear());
 deleteBtn.addEventListener('click', () => deleteNumber());
 numberButtons.forEach((button) => {
-    button.addEventListenr('click', () => appendNumber(button.innerText))
+    button.addEventListener('click', () => appendNumber(button.innerText))
 });
 operatorButtons.forEach((button) => {
     button.addEventListener('click', () => setOperator(button.innerText))
 });
-equalsTo.addEventListener('click', () => { calculate() });
+equalsTo.addEventListener('click', () => calculate());
+btns.forEach((button) => {
+    button.addEventListener('mousedown', () => event.preventDefault())
+});
+
 
 function appendNumber(num) {
     if (currentOpScreen.innerText === '0' || shouldResetScreen) {
@@ -32,8 +37,12 @@ function appendNumber(num) {
     if (num === '.') {
         appendPoint();
     } else {
-        currentOpScreen.innerText += num;
-    };
+        if (!checkLength()) {
+            currentOpScreen.innerText += num;
+        } else {
+            err ('limit reached');
+        }
+    }
 };
 
 function appendPoint() {
@@ -78,7 +87,7 @@ function setOperator(sign) {
 function calculate() {
     if (!operationSet || shouldResetScreen) { return; }
     secondOperand = currentOpScreen.innerText;
-    currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('div by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
+    currentOpScreen.innerText = (secondOperand === '0' && operator === '÷') ? err('divided by zero') : (Math.round(operate(firstOperand, operator, secondOperand) * 1000)) / 1000;
     previousOpScreen.innerText = `${firstOperand} ${operator} ${secondOperand} = `;
     operationSet = false;
 };
@@ -96,6 +105,7 @@ function operate(a, operator, b) {
             return (a - b)
         case '+':
             return (a + b)
+
         default:
             return;
     }
@@ -106,15 +116,11 @@ function err(code) {
         case 'divided by zero':
             previousOpScreen.innerText = `${firstOperand} ${operator}`;
             currentOpScreen.innerText = '';
-            equalsToClicked = false;
             alert('Divided by zero! Undefined.');
             return currentOpScreen.innerText;
-        case 'no second operand input':
-            previousOpScreen.innerText = `${firstOperand} ${operator}`;
-            currentOpScreen.innerText = '';
-            equalsToClicked = false;
-            alert('input a second number.');
-            return currentOpScreen.innerText;
+        case 'limit reached':
+            alert('Length Limit for calculator reached! Please choose an operation to be performed.');
+            return;
 
         default:
             break;
@@ -157,3 +163,11 @@ function keyboardInputHandler(input) {
             break;
     }
 };
+
+function checkLength() {
+    if (currentOpScreen.innerText.length >= 28) {
+        return true;
+    } else {
+        return false;
+    }
+}
