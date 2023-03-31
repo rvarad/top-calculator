@@ -1,6 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
+@font-face {
+    font-family: digital;
+    src: url(./digital_7/digital-7.ttf);
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -52,6 +57,7 @@ body{
     padding: 0px 10px;
     width: 100%;
     min-height: 40px;
+    font-family: digital;
     font-size: 30px;
 }
 
@@ -59,7 +65,9 @@ body{
     padding: 0px 10px;
     width: 100%;
     min-height: 60px;
+    font-family: digital;
     font-size: 40px;
+    font-weight: bold;
 }
 
 button {
@@ -108,6 +116,11 @@ button {
     row-gap: 10px;
 }
 
+.number.btn, #dot {
+    font-family: digital;
+    font-weight: bold;
+}
+
 .btn{
     background-color: rgb(99, 98, 98);
     color: white;
@@ -138,11 +151,10 @@ button#equals:active {
 
 .footer{
     width: 100%;
-    height: 8%;
+    height: 6%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.212);
 }
 
 .footer .credits a{
