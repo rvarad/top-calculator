@@ -154,7 +154,7 @@ function inputConvertor(input) {
 };
 
 function keyboardInputHandler(input) {
-    console.log(input)
+    // console.log(input)
     switch (true) {
         case (0 <= Number(input) && Number(input) <= 9):
             return appendNumber(input);
